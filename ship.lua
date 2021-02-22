@@ -14,7 +14,6 @@ function ship:load()
 end
 
 function ship:draw()
-  love.graphics.print(self.roll)
   love.graphics.translate(self.x, self.y)
   love.graphics.rotate( self.yaw )
   love.graphics.polygon("fill", 
@@ -26,7 +25,7 @@ function ship:draw()
   
 end
 
-function ship:update(dt)
+function ship:update(dt, su)
   local turnKeyDown = false
   if love.keyboard.isDown("right") then
     if self.roll < 0 then
@@ -82,6 +81,14 @@ function ship:update(dt)
   velocity_y = self.speed * math.sin(self.yaw)
   self.x = self.x + velocity_x 
   self.y = self.y +  velocity_y
+
+  self.x = self.x + su.x
+  self.y = self.y + su.y
+
+  self.x = math.max(self.x, self.length / 2)
+  self.y = math.max(self.y, self.length / 2)
+  self.x = math.min(self.x, love.graphics.getWidth() - self.length / 2)
+  self.y = math.min(self.y, love.graphics.getHeight() - self.length / 2)
 end
 
 return ship

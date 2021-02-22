@@ -8,7 +8,8 @@ function love.load()
 end
 
 function love.update(dt)
-  Ship:update(dt)
+  su = Starfield:update(dt, Ship.x, Ship.y)
+  Ship:update(dt, su)
 end
 
 function love.draw()
