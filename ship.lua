@@ -1,4 +1,6 @@
 
+local Starfield = require("starfield")
+
 local ship = {}
 
 function ship:load()
@@ -14,6 +16,7 @@ function ship:load()
 end
 
 function ship:draw()
+  love.graphics.push()
   love.graphics.translate(self.x, self.y)
   love.graphics.rotate( self.yaw )
   love.graphics.polygon("fill", 
@@ -21,11 +24,17 @@ function ship:draw()
                         self.length / 2, 0,
                         -(self.length / 2), -(self.length / 2)
                         )
-  love.graphics.translate(-self.x, -self.y)
+  love.graphics.pop()
   
 end
 
-function ship:update(dt, su)
+function ship:weapon(bullets)
+  if love.keyboard.isDown("space") then
+    bullets:fire(self.x + Starfield.x, self.y + Starfield.y, self.yaw)
+  end
+end
+
+function ship:update(dt, su, bullets)
   local turnKeyDown = false
   if love.keyboard.isDown("right") then
     if self.roll < 0 then
@@ -89,6 +98,8 @@ function ship:update(dt, su)
   self.y = math.max(self.y, self.length / 2)
   self.x = math.min(self.x, love.graphics.getWidth() - self.length / 2)
   self.y = math.min(self.y, love.graphics.getHeight() - self.length / 2)
+
+  ship:weapon(bullets)
 end
 
 return ship
